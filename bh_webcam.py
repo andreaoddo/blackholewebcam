@@ -73,8 +73,6 @@ class BlackHole:
 def parse_arguments():
 	parser = argparse.ArgumentParser(description="BlackHole WebCam v1.1")
 	parser.add_argument('--cams', help='list available webcams', action="store_true")
-	parser.add_argument('-x', help='x-coordinate in pixels of the center of the BH', type=float, nargs='?', action='store')
-	parser.add_argument('-y', help='y-coordinate in pixels of the center of the BH', type=float, nargs='?', action='store')
 	parser.add_argument('-r', help='radius in pixels of the BH', type=float, nargs='?', action='store')
 	parser.add_argument('-i', '--id', help='webcam id', type=int, nargs='?', action='store')
 	return parser.parse_args()
@@ -104,12 +102,10 @@ if __name__ == '__main__':
 		quit()
 
 	pixels_x, pixels_y = np.shape(frame)[:2]
-	print(pixels_x, pixels_y)
-	x = bh_args.y if bh_args.y is not None else pixels_y // 2
-	y = bh_args.x if bh_args.x is not None else pixels_x // 2
+	x, y = pixels_x//2, pixels_y//2
 	r = bh_args.r if bh_args.r is not None else 20
 
-	black_hole = BlackHole([x, y], r)
+	black_hole = BlackHole((x, y), r)
 	DCx, DCy, Idxcrit = black_hole.compute_distorsion(np.shape(frame)[:2])
 
 	while rval:
